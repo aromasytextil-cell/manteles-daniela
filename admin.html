@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Admin · Reyna Isabel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="contenido.defaults.js"></script>
+  <script src="catalogo.defaults.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas:'#FFFFFF', chalk:'#FAF9F7', bone:'#F4F1EB', linen:'#EAE4DA', sand:'#DFD6C7',
+            ink:'#1D1D1F', graphite:'#3A3A3C', muted:'#6E6E73', hairline:'#E8E8ED',
+            blush:'#F3E3DE', sage:'#E1E7DC', 'ink-soft':'#1D1D1F'
+          },
+          fontFamily: {
+            serif: ['Fraunces','Georgia','serif'],
+            sans:  ['Inter','system-ui','sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body{ text-rendering:optimizeLegibility; }
+    .field{ width:100%; background:#FFFFFF; border:1px solid #E8E8ED; border-radius:8px;
+            padding:.55rem .75rem; font-size:14px; color:#1D1D1F; }
+    .field:focus{ outline:none; border-color:#1D1D1F; box-shadow:0 0 0 2px rgba(29,29,31,.12); }
+    .btn{ display:inline-flex; align-items:center; gap:.5rem; border-radius:9999px;
+          padding:.5rem 1.1rem; font-size:13px; font-weight:500; transition:all .2s; }
+    .btn-dark{ background:#1D1D1F; color:#fff; }
+    .btn-dark:hover{ background:#000; }
+    .btn-ghost{ border:1px solid #DFD6C7; color:#1D1D1F; background:#fff; }
+    .btn-ghost:hover{ border-color:#1D1D1F; }
+    .btn-danger{ border:1px solid #E8E8ED; color:#C0392B; background:#fff; }
+    .btn-danger:hover{ border-color:#C0392B; }
+    .lbl{ font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:#6E6E73; }
+    .panel-card{ border:1px solid #E8E8ED; background:#fff; border-radius:14px; }
+    input[type=checkbox]{ width:16px; height:16px; accent-color:#1D1D1F; }
+    table{ font-variant-numeric:tabular-nums; }
+  </style>
+</head>
+<body class="bg-chalk text-ink font-sans antialiased min-h-screen">
+
+  <!-- ================= LOGIN ================= -->
+  <div id="login" class="fixed inset-0 z-50 flex items-center justify-center bg-bone/95 backdrop-blur px-6">
+    <div class="w-full max-w-sm panel-card p-8 shadow-sm">
+      <p class="lbl">Acceso restringido</p>
+      <h1 class="mt-2 font-serif text-3xl">Panel <em>admin.</em></h1>
+      <form id="form-login" class="mt-6 space-y-4">
+        <div>
+          <label class="lbl mb-1 block" for="clave">Clave</label>
+          <input id="clave" type="password" required class="field" placeholder="••••••••">
+        </div>
+        <p id="login-err" class="hidden text-xs text-red-600">Clave incorrecta.</p>
+        <button class="btn btn-dark w-full justify-center">Entrar</button>
+      </form>
+      <p class="mt-4 text-center text-[11px] text-muted">Clave por defecto: <span class="font-mono">manteles2026</span> · se cambia en Configuración</p>
+    </div>
+  </div>
+
+  <!-- ================= APP ================= -->
+  <div id="app" class="hidden mx-auto max-w-6xl px-6 py-10">
+
+    <!-- header -->
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-8">
+      <div>
+        <p class="lbl">Reyna Isabel · panel</p>
+        <h1 class="font-serif text-3xl mt-1">Administración de la página</h1>
+      </div>
+      <div class="flex gap-2">
+        <button id="btn-export" class="btn btn-ghost">Descargar backup ↓</button>
+        <label class="btn btn-ghost cursor-pointer">Restaurar backup ↑
+          <input id="file-import" type="file" accept="application/json" class="hidden">
+        </label>
+        <button id="btn-logout" class="btn btn-ghost">Salir</button>
+      </div>
+    </header>
+
+    <div class="mb-6 flex items-start gap-3 rounded-lg bg-blush border border-blush px-4 py-3">
+      <span class="text-lg">☀</span>
+      <p class="text-sm leading-relaxed text-graphite">
+        Los cambios se guardan <strong>en este navegador</strong>. Para que la página de GitHub los muestre,
+        tocá <strong>“Descargar backup”</strong> y pasame el archivo — lo dejo publicado en el sitio en un momento.
+        Reemplazá <span class="font-mono text-xs">manteles2026</span> por tu clave en Configuración.
+      </p>
+    </div>
+
+    <!-- tabs -->
+    <nav class="flex gap-1 border-b border-hairline mb-8" role="tablist">
+      <button data-tab="catalogo"  class="tab px-4 py-2 text-sm font-medium border-b-2 border-transparent text-muted">Catálogo</button>
+      <button data-tab="fotos"     class="tab px-4 py-2 text-sm font-medium border-b-2 border-transparent text-muted">Fotos</button>
+      <button data-tab="contenido" class="tab px-4 py-2 text-sm font-medium border-b-2 border-transparent text-muted">Contenido</button>
+      <button data-tab="config"    class="tab px-4 py-2 text-sm font-medium border-b-2 border-transparent text-muted">Configuración</button>
+    </nav>
+
+    <!-- ============ CATÁLOGO ============ -->
+    <section id="tab-catalogo" class="tabpane">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="font-serif text-xl">Piezas</h2>
+          <p class="text-sm text-muted">Dejá el precio vacío para mostrar “Consultar precio”.</p>
+        </div>
+        <button id="btn-nueva" class="btn btn-dark">+ Nueva pieza</button>
+      </div>
+      <div class="panel-card overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left border-b border-hairline text-[11px] uppercase tracking-[0.1em] text-muted">
+              <th class="px-4 py-3">Foto</th><th class="px-4 py-3">Título</th><th class="px-4 py-3">Categoría</th>
+              <th class="px-4 py-3">Precio</th><th class="px-4 py-3">Estado</th>
+              <th class="px-4 py-3">Destac.</th><th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- editor de pieza -->
+      <div id="modal" class="hidden fixed inset-0 z-40 bg-ink/40 flex items-start justify-center overflow-y-auto p-6 backdrop-blur-sm">
+        <form id="form-editar" class="panel-card w-full max-w-2xl p-6 space-y-4 my-8">
+          <h3 id="modal-titulo" class="font-serif text-xl">Editar pieza</h3>
+          <input type="hidden" id="f-id">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+              <label class="lbl mb-1 block" for="f-titulo">Título</label>
+              <input id="f-titulo" class="field" required>
+            </div>
+            <div>
+              <label class="lbl mb-1 block" for="f-categoria">Categoría</label>
+              <select id="f-categoria" class="field">
+                <option value="manteles">Manteles</option>
+                <option value="caminos">Caminos de Mesa</option>
+                <option value="accesorios">Accesorios de Centro</option>
+                <option value="aromas">Aromas y Velas</option>
+              </select>
+            </div>
+            <div>
+              <label class="lbl mb-1 block" for="f-estado">Estado</label>
+              <select id="f-estado" class="field">
+                <option value="disponible">Disponible</option>
+                <option value="vendido">Vendido</option>
+                <option value="oculto">Oculto (no se muestra)</option>
+              </select>
+            </div>
+            <div>
+              <label class="lbl mb-1 block" for="f-precio">Precio (vacío = Consultar)</label>
+              <input id="f-precio" type="number" min="0" step="1" class="field">
+            </div>
+            <div>
+              <label class="lbl mb-1 block" for="f-foto">Clave de foto (p1…p6)</label>
+              <input id="f-foto" class="field" placeholder="p1, p2, … o vacío">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="lbl mb-1 block" for="f-descripcion">Descripción</label>
+              <textarea id="f-descripcion" rows="2" class="field"></textarea>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="lbl mb-1 block" for="f-medidas">Medidas</label>
+              <input id="f-medidas" class="field">
+            </div>
+            <label class="flex items-center gap-2 sm:col-span-2">
+              <input type="checkbox" id="f-destacado"> <span class="text-sm">Pieza destacada (aparece primero en “Todo”)</span>
+            </label>
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" id="btn-cancelar" class="btn btn-ghost">Cancelar</button>
+            <button type="button" id="btn-eliminar" class="btn btn-danger ml-auto">Eliminar</button>
+            <button type="submit" class="btn btn-dark">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ FOTOS ============ -->
+    <section id="tab-fotos" class="tabpane hidden">
+      <div class="mb-4">
+        <h2 class="font-serif text-xl">Fotos del sitio</h2>
+        <p class="text-sm text-muted">Cada ranura alimenta la página. Podés subir una imagen o pegar una URL.
+           La imagen vive en tu navegador hasta que publiquemos el backup.</p>
+      </div>
+      <div id="fotos-grid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <!-- ============ CONTENIDO ============ -->
+    <section id="tab-contenido" class="tabpane hidden">
+      <div class="grid gap-6 lg:grid-cols-2">
+
+        <div class="panel-card p-6 space-y-4">
+          <h3 class="font-serif text-lg">Marca y contacto</h3>
+          <div><label class="lbl mb-1 block">Nombre</label><input id="c-nombre" class="field"></div>
+          <div><label class="lbl mb-1 block">Tagline</label><input id="c-tagline" class="field"></div>
+          <div><label class="lbl mb-1 block">WhatsApp (con código país, solo números)</label><input id="c-whatsapp" class="field"></div>
+          <div><label class="lbl mb-1 block">Instagram</label><input id="c-instagram" class="field"></div>
+          <div><label class="lbl mb-1 block">Email</label><input id="c-email" class="field"></div>
+          <div><label class="lbl mb-1 block">Ciudad</label><input id="c-ciudad" class="field"></div>
+        </div>
+
+        <div class="panel-card p-6 space-y-4">
+          <h3 class="font-serif text-lg">Portada (hero)</h3>
+          <div><label class="lbl mb-1 block">Rótulo superior</label><input id="c-eyebrow" class="field"></div>
+          <div><label class="lbl mb-1 block">Título</label><input id="c-titulo" class="field"></div>
+          <div><label class="lbl mb-1 block">Bajada</label><textarea id="c-subtitulo" rows="2" class="field"></textarea></div>
+          <div><label class="lbl mb-1 block">Botón</label><input id="c-cta" class="field"></div>
+          <h3 class="font-serif text-lg pt-2">Colección</h3>
+          <div><label class="lbl mb-1 block">Bajada</label><textarea id="c-bajada" rows="2" class="field"></textarea></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="lbl mb-1 block">Manteles</label><input id="c-f-manteles" class="field"></div>
+            <div><label class="lbl mb-1 block">Caminos</label><input id="c-f-caminos" class="field"></div>
+            <div><label class="lbl mb-1 block">Accesorios</label><input id="c-f-accesorios" class="field"></div>
+            <div><label class="lbl mb-1 block">Aromas y Velas</label><input id="c-f-aromas" class="field"></div>
+          </div>
+        </div>
+
+        <div class="panel-card p-6 space-y-4 lg:col-span-2">
+          <h3 class="font-serif text-lg">Manifiesto</h3>
+          <div><label class="lbl mb-1 block">Frase destacada</label><input id="c-quote" class="field"></div>
+          <div><label class="lbl mb-1 block">Párrafos (uno por línea)</label><textarea id="c-parrafos" rows="4" class="field"></textarea></div>
+          <h3 class="font-serif text-lg pt-2">Footer</h3>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div><label class="lbl mb-1 block">Frase</label><input id="c-footer-frase" class="field"></div>
+            <div><label class="lbl mb-1 block">Nota legal</label><input id="c-footer-legal" class="field"></div>
+          </div>
+          <div><label class="lbl mb-1 block">Sellos de confianza (uno por línea)</label><textarea id="c-trust" rows="3" class="field"></textarea></div>
+        </div>
+
+      </div>
+      <div class="mt-6 flex justify-end"><button id="btn-save-contenido" class="btn btn-dark">Guardar contenido</button></div>
+    </section>
+
+    <!-- ============ CONFIGURACIÓN ============ -->
+    <section id="tab-config" class="tabpane hidden">
+      <div class="grid gap-6 lg:grid-cols-2">
+        <div class="panel-card p-6 space-y-4">
+          <h3 class="font-serif text-lg">Clave del panel</h3>
+          <div><label class="lbl mb-1 block">Clave actual</label><input id="cfg-clave" class="field"></div>
+          <button id="btn-save-clave" class="btn btn-dark">Guardar clave</button>
+        </div>
+        <div class="panel-card p-6 space-y-4">
+          <h3 class="font-serif text-lg">Zona delicada</h3>
+          <p class="text-sm text-muted">Vuelve el sitio a su estado inicial (los defaults del código).<br>No toca el catálogo ni el contenido publicado en GitHub.</p>
+          <button id="btn-reset" class="btn btn-danger">Restablecer a los originales</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="flash" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden rounded-full bg-ink px-5 py-2.5 text-sm text-white shadow-lg"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- store bajo el mismo contrato que index.html ---------- */
+  var K_CAT = 'manteles_catalogo', K_CON = 'manteles_contenido', K_CLAVE = 'manteles_admin_clave';
+  function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch (e) { return d; } }
+  function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+  var CAT = load(K_CAT, null) || JSON.parse(JSON.stringify(window.CATALOGO_DEFECTO || []));
+  var C   = load(K_CON, null) || JSON.parse(JSON.stringify(window.CONTENIDO_DEFECTO || {}));
+  if (!C.fotos) C.fotos = {};
+  if (!C.marca) C.marca = {};
+  if (!C.catalogo) C.catalogo = {};
+  if (!C.hero) C.hero = {};
+  if (!C.manifiesto) C.manifiesto = {};
+  if (!C.footer) C.footer = {};
+  if (!Array.isArray(C.trust)) C.trust = [];
+
+  var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+  function flash(msg) {
+    var f = $('#flash'); f.textContent = msg; f.classList.remove('hidden');
+    clearTimeout(flash._t); flash._t = setTimeout(function () { f.classList.add('hidden'); }, 2200);
+  }
+
+  /* ---------- login ---------- */
+  $('#form-login').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var clave = localStorage.getItem(K_CLAVE) || 'manteles2026';
+    if ($('#clave').value === clave) {
+      $('#login').classList.add('hidden');
+      $('#app').classList.remove('hidden');
+    } else {
+      $('#login-err').classList.remove('hidden');
+    }
+  });
+  $('#btn-logout').addEventListener('click', function () {
+    $('#app').classList.add('hidden');
+    $('#login').classList.remove('hidden');
+    $('#clave').value = ''; $('#login-err').classList.add('hidden');
+  });
+
+  /* ---------- tabs ---------- */
+  $$('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      $$('.tab').forEach(function (o) { o.classList.remove('border-ink', 'text-ink'); o.classList.add('text-muted'); });
+      t.classList.add('border-ink', 'text-ink'); t.classList.remove('text-muted');
+      $$('.tabpane').forEach(function (p) { p.classList.add('hidden'); });
+      $('#tab-' + t.dataset.tab).classList.remove('hidden');
+    });
+  });
+
+  /* ============ CATÁLOGO ============ */
+  var fmtPrecio = function (n) {
+    if (n == null || n === '') return 'Consultar precio';
+    return '$' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+  };
+  var CAT_LABEL = { manteles:'Manteles', caminos:'Caminos', accesorios:'Accesorios', aromas:'Aromas y Velas' };
+
+  function renderCatalogo() {
+    var tb = $('#tbody'); tb.innerHTML = '';
+    CAT.forEach(function (it) {
+      var tr = document.createElement('tr');
+      tr.className = 'border-b border-hairline hover:bg-bone/60';
+      var mini = it.foto && C.fotos[it.foto]
+        ? '<img src="' + C.fotos[it.foto] + '" class="h-10 w-10 rounded-lg object-cover">'
+        : '<div class="h-10 w-10 rounded-lg bg-bone"></div>';
+      tr.innerHTML =
+        '<td class="px-4 py-3">' + mini + '</td>' +
+        '<td class="px-4 py-3 font-medium">' + (it.titulo || '') + '</td>' +
+        '<td class="px-4 py-3 text-muted">' + (CAT_LABEL[it.categoria] || it.categoria || '') + '</td>' +
+        '<td class="px-4 py-3">' + fmtPrecio(it.precio) + '</td>' +
+        '<td class="px-4 py-3 text-muted">' + (it.estado || 'disponible') + '</td>' +
+        '<td class="px-4 py-3">' + (it.destacado ? '★' : '') + '</td>' +
+        '<td class="px-4 py-3 text-right"><button class="btn btn-ghost !py-1 !px-3" data-edit="' + it.id + '">Editar</button></td>';
+      tb.appendChild(tr);
+    });
+    $$('#tbody [data-edit]').forEach(function (b) {
+      b.addEventListener('click', function () { abrirModal(b.dataset.edit); });
+    });
+  }
+
+  var modalAbierto = null;
+  function abrirModal(id) {
+    modalAbierto = CAT.filter(function (i) { return i.id === id; })[0] || null;
+    $('#form-editar').reset();
+    if (modalAbierto) {
+      $('#modal-titulo').textContent = 'Editar pieza';
+      $('#f-id').value = modalAbierto.id;
+      $('#f-titulo').value = modalAbierto.titulo || '';
+      $('#f-categoria').value = modalAbierto.categoria || 'manteles';
+      $('#f-estado').value = modalAbierto.estado || 'disponible';
+      $('#f-precio').value = (modalAbierto.precio == null ? '' : modalAbierto.precio);
+      $('#f-foto').value = modalAbierto.foto || '';
+      $('#f-descripcion').value = modalAbierto.descripcion || '';
+      $('#f-medidas').value = modalAbierto.medidas || '';
+      $('#f-destacado').checked = !!modalAbierto.destacado;
+      $('#btn-eliminar').classList.remove('hidden');
+    } else {
+      $('#modal-titulo').textContent = 'Nueva pieza';
+      $('#f-id').value = 'ar_' + Math.random().toString(36).slice(2, 7);
+      $('#f-estado').value = 'disponible';
+      $('#f-precio').value = '';
+      $('#btn-eliminar').classList.add('hidden');
+    }
+    $('#modal').classList.remove('hidden');
+  }
+  function cerrarModal() { $('#modal').classList.add('hidden'); modalAbierto = null; }
+
+  $('#btn-nueva').addEventListener('click', function () { abrirModal(null); });
+  $('#btn-cancelar').addEventListener('click', cerrarModal);
+  $('#btn-eliminar').addEventListener('click', function () {
+    if (!modalAbierto || !confirm('¿Eliminar “' + modalAbierto.titulo + '” del catálogo?')) return;
+    CAT = CAT.filter(function (i) { return i.id !== modalAbierto.id; });
+    save(K_CAT, CAT); cerrarModal(); renderCatalogo(); flash('Pieza eliminada');
+  });
+  $('#form-editar').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var datos = {
+      id: $('#f-id').value,
+      categoria: $('#f-categoria').value,
+      titulo: $('#f-titulo').value.trim(),
+      descripcion: $('#f-descripcion').value.trim(),
+      medidas: $('#f-medidas').value.trim(),
+      precio: $('#f-precio').value === '' ? null : Number($('#f-precio').value),
+      estado: $('#f-estado').value,
+      destacado: $('#f-destacado').checked,
+      foto: $('#f-foto').value.trim()
+    };
+    var idx = CAT.findIndex(function (i) { return i.id === datos.id; });
+    if (idx >= 0) CAT[idx] = datos; else CAT.push(datos);
+    save(K_CAT, CAT); cerrarModal(); renderCatalogo(); flash('Catálogo guardado ✓');
+  });
+
+  /* ============ FOTOS ============ */
+  var CLAVES = ['hero', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+  CAT.forEach(function (i) { if (i.foto && CLAVES.indexOf(i.foto) < 0) CLAVES.push(i.foto); });
+
+  function renderFotos() {
+    var g = $('#fotos-grid'); g.innerHTML = '';
+    CLAVES.forEach(function (clave) {
+      var card = document.createElement('div');
+      card.className = 'panel-card p-4';
+      var url = C.fotos[clave] || '';
+      card.innerHTML =
+        '<p class="lbl mb-2">' + clave + '</p>' +
+        '<div class="h-36 rounded-lg bg-bone mb-3 overflow-hidden flex items-center justify-center">' +
+        (url ? '<img src="' + url + '" class="h-full w-full object-cover">' : '<span class="text-xs text-muted">sin foto</span>') +
+        '</div>' +
+        '<input class="field mb-2 text-xs" data-foto-url="' + clave + '" placeholder="URL de imagen" value="' + (url.startsWith('data:') ? '' : url) + '">' +
+        '<div class="flex gap-2">' +
+        '<label class="btn btn-ghost !px-3 cursor-pointer text-xs">Subir imagen<input type="file" accept="image/*" class="hidden" data-foto-file="' + clave + '"></label>' +
+        (url ? '<button type="button" class="btn btn-danger !px-3 text-xs" data-foto-clear="' + clave + '">Quitar</button>' : '') +
+        '</div>';
+      g.appendChild(card);
+    });
+
+    $$('#fotos-grid [data-foto-file]').forEach(function (inp) {
+      inp.addEventListener('change', function (ev) {
+        var file = ev.target.files[0]; if (!file) return;
+        if (file.size > 400 * 1024) { flash('Imagen muy pesada (máx ~400 KB). Reducila antes.'); return; }
+        var r = new FileReader();
+        r.onload = function () { C.fotos[inp.dataset.fotoFile] = r.result; guardar(); renderFotos(); flash('Foto cargada ✓'); };
+        r.readAsDataURL(file);
+      });
+    });
+    $$('#fotos-grid [data-foto-url]').forEach(function (inp) {
+      inp.addEventListener('change', function () { C.fotos[inp.dataset.fotoUrl] = inp.value.trim(); guardar(); renderFotos(); });
+    });
+    $$('#fotos-grid [data-foto-clear]').forEach(function (b) {
+      b.addEventListener('click', function () { delete C.fotos[b.dataset.fotoClear]; guardar(); renderFotos(); });
+    });
+  }
+
+  /* ============ CONTENIDO ============ */
+  function llenarContenido() {
+    $('#c-nombre').value = C.marca.nombre || '';
+    $('#c-tagline').value = C.marca.tagline || '';
+    $('#c-whatsapp').value = C.marca.whatsapp || '';
+    $('#c-instagram').value = C.marca.instagram || '';
+    $('#c-email').value = C.marca.email || '';
+    $('#c-ciudad').value = C.marca.ciudad || '';
+    $('#c-eyebrow').value = C.hero.eyebrow || '';
+    $('#c-titulo').value = C.hero.titulo || '';
+    $('#c-subtitulo').value = C.hero.subtitulo || '';
+    $('#c-cta').value = C.hero.cta || '';
+    $('#c-bajada').value = C.catalogo.bajada || '';
+    var f = C.catalogo.filtros || {};
+    $('#c-f-manteles').value = f.manteles || 'Manteles';
+    $('#c-f-caminos').value = f.caminos || 'Caminos de Mesa';
+    $('#c-f-accesorios').value = f.accesorios || 'Accesorios de Centro';
+    $('#c-f-aromas').value = f.aromas || 'Aromas y Velas';
+    $('#c-quote').value = C.manifiesto.pullQuote || '';
+    $('#c-parrafos').value = (C.manifiesto.parrafos || []).join('\n');
+    $('#c-trust').value = (C.trust || []).join('\n');
+    $('#c-footer-frase').value = C.footer.frase || '';
+    $('#c-footer-legal').value = C.footer.legal || '';
+  }
+  $('#btn-save-contenido').addEventListener('click', function () {
+    C.marca = { nombre: $('#c-nombre').value.trim(), tagline: $('#c-tagline').value.trim(),
+      whatsapp: $('#c-whatsapp').value.trim(), instagram: $('#c-instagram').value.trim(),
+      email: $('#c-email').value.trim(), ciudad: $('#c-ciudad').value.trim() };
+    C.hero = { eyebrow: $('#c-eyebrow').value.trim(), titulo: $('#c-titulo').value.trim(),
+      subtitulo: $('#c-subtitulo').value.trim(), cta: $('#c-cta').value.trim() };
+    C.catalogo.bajada = $('#c-bajada').value.trim();
+    C.catalogo.filtros = { todo: 'Todo', manteles: $('#c-f-manteles').value.trim(),
+      caminos: $('#c-f-caminos').value.trim(), accesorios: $('#c-f-accesorios').value.trim(),
+      aromas: $('#c-f-aromas').value.trim() };
+    C.manifiesto = { pullQuote: $('#c-quote').value.trim(),
+      parrafos: $('#c-parrafos').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean) };
+    C.trust = $('#c-trust').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    C.footer = { frase: $('#c-footer-frase').value.trim(), legal: $('#c-footer-legal').value.trim() };
+    guardar(); flash('Contenido guardado ✓');
+  });
+
+  /* ---------- config ---------- */
+  $('#btn-save-clave').addEventListener('click', function () {
+    var v = $('#cfg-clave').value.trim();
+    if (!v) return flash('Escribí una clave');
+    localStorage.setItem(K_CLAVE, v); $('#cfg-clave').value = ''; flash('Clave guardada ✓');
+  });
+  $('#btn-reset').addEventListener('click', function () {
+    if (!confirm('¿Volver al estado original? Se pierden los cambios guardados en este navegador.')) return;
+    localStorage.removeItem(K_CAT); localStorage.removeItem(K_CON);
+    CAT = JSON.parse(JSON.stringify(window.CATALOGO_DEFECTO || []));
+    C = JSON.parse(JSON.stringify(window.CONTENIDO_DEFECTO || {})); if (!C.fotos) C.fotos = {};
+    llenar(); flash('Restaurado a los originales');
+  });
+
+  /* ---------- backup ---------- */
+  $('#btn-export').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify({ catalogo: CAT, contenido: C, fecha: new Date().toISOString() }, null, 2)],
+      { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'reynaisabel-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+  });
+  $('#file-import').addEventListener('change', function (ev) {
+    var file = ev.target.files[0]; if (!file) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var data = JSON.parse(r.result);
+        if (Array.isArray(data.catalogo)) { CAT = data.catalogo; save(K_CAT, CAT); }
+        if (data.contenido) { C = data.contenido; save(K_CON, C); }
+        llenar(); flash('Backup restaurado ✓');
+      } catch (e) { flash('Archivo inválido'); }
+    };
+    r.readAsText(file);
+  });
+
+  function guardar() {
+    save(K_CAT, CAT);
+    save(K_CON, C);
+  }
+  function llenar() { renderCatalogo(); renderFotos(); llenarContenido(); }
+  llenar();
+})();
+</script>
+</body>
+</html>
