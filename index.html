@@ -456,7 +456,7 @@ tailwind.config = {
   var vacio = $('#grid-vacio');
   var chips = $('#chips');
   var FILTROS = (C.catalogo && C.catalogo.filtros) || { todo: 'Todo' };
-  var ORDEN = ['todo', 'manteles', 'caminos', 'accesorios'];
+  var ORDEN = ['todo', 'manteles', 'caminos', 'accesorios', 'aromas'];
   var actual = 'todo';
 
   function crearCard(item) {
@@ -503,7 +503,7 @@ tailwind.config = {
 
     var pr = document.createElement('p');
     pr.className = 'price mt-3';
-    pr.textContent = precio(item.precio);
+    pr.textContent = item.precio != null ? precio(item.precio) : 'Consultar precio';
 
     info.appendChild(cat);
     info.appendChild(h);

@@ -40,7 +40,8 @@ window.CONTENIDO_DEFECTO = {
       todo: 'Todo',
       manteles: 'Manteles',
       caminos: 'Caminos de Mesa',
-      accesorios: 'Accesorios de Centro'
+      accesorios: 'Accesorios de Centro',
+      aromas: 'Aromas y Velas'
     },
     vacio: 'No hay piezas en esta categoría por ahora.'
   },
