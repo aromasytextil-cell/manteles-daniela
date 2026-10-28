@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reyna Isabel — Mantelería artesanal</title>
+<meta name="description" content="Manteles, caminos de mesa y accesorios de centro hechos a mano con telas naturales. Piezas de mesa para todos los días.">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23F4F1EB'/><text x='16' y='22' font-family='Georgia,serif' font-size='15' fill='%231D1D1F' text-anchor='middle'>MD</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        canvas:'#FFFFFF', chalk:'#FAF9F7', bone:'#F4F1EB', linen:'#EAE4DA', sand:'#DFD6C7',
+        ink:'#1D1D1F', graphite:'#3A3A3C', muted:'#6E6E73', faint:'#86868B', hairline:'#E8E8ED',
+        blush:'#F3E3DE', clay:'#EDDCD2', sage:'#E1E7DC', sky:'#E2E8EA',
+        'blush-ink':'#C08A80', 'sage-ink':'#7E8F73', 'clay-ink':'#B5836B'
+      },
+      fontFamily: {
+        sans: ['Inter','ui-sans-serif','system-ui','-apple-system','sans-serif'],
+        display: ['"Playfair Display"','Georgia','serif']
+      },
+      borderRadius: { btn:'8px', card:'12px', media:'20px' },
+      boxShadow: {
+        xs:'0 1px 2px rgba(29,29,31,.06)',
+        soft:'0 2px 12px rgba(29,29,31,.08)',
+        lift:'0 12px 32px rgba(29,29,31,.10)'
+      },
+      transitionTimingFunction: { out:'cubic-bezier(.22,1,.36,1)' }
+    }
+  }
+}
+</script>
+
+<style>
+  :root{
+    --ease: cubic-bezier(.22,1,.36,1);
+    --nav-h: 64px;
+    --pad-x: 24px;
+    --max: 1200px;
+  }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    background:#FFFFFF; color:#1D1D1F;
+    font-family:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+    font-size:16.5px; line-height:1.65; font-weight:400;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  @media (min-width:768px){ body{ font-size:17px; } }
+
+  .wrap{ max-width:var(--max); margin-inline:auto; padding-inline:var(--pad-x); }
+  @media (min-width:768px){ :root{ --pad-x:32px; } }
+
+  /* --- foco visible (duro) --- */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible,
+  [tabindex]:focus-visible{
+    outline:2px solid #1D1D1F; outline-offset:2px; border-radius:2px;
+  }
+
+  /* --- tipografía --- */
+  .display-xl{
+    font-family:'Playfair Display',Georgia,serif; font-weight:400;
+    font-size:clamp(40px,6vw,72px); line-height:1.02; letter-spacing:-.02em;
+  }
+  .display-l{
+    font-family:'Playfair Display',Georgia,serif; font-weight:400;
+    font-size:clamp(30px,4vw,44px); line-height:1.1; letter-spacing:-.01em;
+  }
+  .pull-quote{
+    font-family:'Playfair Display',Georgia,serif; font-style:italic; font-weight:400;
+    font-size:clamp(22px,2.4vw,28px); line-height:1.35; letter-spacing:-.005em;
+  }
+  .h2{ font-size:clamp(26px,3vw,32px); line-height:1.2; font-weight:500; letter-spacing:-.01em; }
+  .h3{ font-size:19px; line-height:1.3; font-weight:500; letter-spacing:-.005em; }
+  .eyebrow{
+    font-size:12px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:#6E6E73;
+  }
+  .wordmark{
+    font-size:13.5px; font-weight:500; letter-spacing:.28em; text-transform:uppercase;
+  }
+  .price{ font-size:16px; font-weight:500; font-variant-numeric:tabular-nums; color:#1D1D1F; }
+
+  /* --- nav frosted --- */
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:50; height:var(--nav-h);
+    background:rgba(255,255,255,.72);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid transparent;
+    transition:transform 320ms var(--ease), border-color 240ms var(--ease);
+  }
+  .nav-scrolled{ border-bottom-color:#E8E8ED; }
+  .nav-hidden{ transform:translateY(-100%); }
+
+  /* --- botones --- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    border-radius:8px; padding:.875rem 1.5rem; font-size:15px; font-weight:500; line-height:1;
+    transition:transform 150ms var(--ease), background-color 150ms var(--ease), color 150ms var(--ease), border-color 150ms var(--ease), box-shadow 150ms var(--ease);
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn-primary{ background:#1D1D1F; color:#FFFFFF; }
+  .btn-primary:hover{ background:#000000; box-shadow:0 12px 32px rgba(29,29,31,.10); }
+  .btn-ghost{ border:1px solid #DFD6C7; color:#1D1D1F; background:transparent; }
+  .btn-ghost:hover{ border-color:#1D1D1F; }
+
+  /* --- media --- */
+  .media{ position:relative; overflow:hidden; background:#F4F1EB; border-radius:20px; }
+  .media img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform 640ms var(--ease), filter 640ms var(--ease);
+  }
+  .card:hover .media img{ transform:scale(1.02); filter:brightness(1.02); }
+
+  /* --- chips --- */
+  .chip{
+    border:1px solid #E8E8ED; background:#FFFFFF; color:#3A3A3C;
+    border-radius:999px; padding:.5rem 1rem; font-size:14px; font-weight:500; line-height:1;
+    transition:background-color 150ms var(--ease), border-color 150ms var(--ease), color 150ms var(--ease);
+  }
+  .chip:hover{ border-color:#DFD6C7; }
+  .chip[aria-selected="true"]{ background:#F3E3DE; border-color:#F3E3DE; color:#1D1D1F; }
+
+  /* --- grilla catálogo --- */
+  #grid{ display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:24px; }
+  .card{ grid-column:span 12; display:flex; flex-direction:column; }
+  .card .media{ aspect-ratio:4/5; }
+  @media (min-width:768px){
+    #grid.flat .card{ grid-column:span 4; }
+    #grid.asym{ grid-auto-rows:298px; }
+    #grid.asym .card{ height:100%; }
+    #grid.asym .card .media{ aspect-ratio:auto; flex:1 1 auto; min-height:0; }
+    #grid.asym .card:nth-child(1){ grid-column:span 7; grid-row:span 2; }
+    #grid.asym .card:nth-child(2),
+    #grid.asym .card:nth-child(3){ grid-column:span 5; grid-row:span 1; }
+    #grid.asym .card:nth-child(n+4){ grid-column:span 4; grid-row:span 2; }
+  }
+  .card .info{ padding-top:14px; }
+  .card .cat{ font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#6E6E73; }
+  .card .desc{ font-size:15px; color:#6E6E73; }
+  .card .med{ font-size:14px; color:#6E6E73; }
+
+  /* --- reveal on scroll --- */
+  .reveal{ opacity:0; transform:translateY(12px); }
+  .reveal.is-in{ opacity:1; transform:none; transition:opacity 700ms var(--ease), transform 700ms var(--ease); }
+
+  /* --- inputs franja a medida --- */
+  .field{
+    width:100%; background:#FFFFFF; border:1px solid #E8E8ED; border-radius:8px;
+    padding:.8rem 1rem; font-size:16px; color:#1D1D1F;
+    transition:border-color 150ms var(--ease);
+  }
+  .field::placeholder{ color:#6E6E73; }
+  .field:hover{ border-color:#DFD6C7; }
+  .field:focus{ border-color:#1D1D1F; outline:none; box-shadow:0 0 0 2px rgba(29,29,31,.12); }
+
+  /* --- flotante WhatsApp --- */
+  .wa-float{
+    position:fixed; right:20px; bottom:20px; z-index:40;
+    opacity:0; transform:translateY(8px); pointer-events:none;
+    transition:opacity 240ms var(--ease), transform 240ms var(--ease);
+  }
+  .wa-float.is-on{ opacity:1; transform:none; pointer-events:auto; }
+
+  /* --- movimiento reducido --- */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1; transform:none; }
+    .reveal.is-in{ transition:none; }
+    .nav{ transition:none; }
+    .nav-hidden{ transform:none; }
+    .media img, .card:hover .media img, .btn, .chip{ transition:none; transform:none; }
+    .wa-float{ transition:none; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap h-full flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5" aria-label="Reyna Isabel">
+      <img src="assets/logo.jpg" alt="" class="h-9 w-9 rounded-full object-cover ring-1 ring-hairline" width="36" height="36">
+      <span id="nav-brand" class="wordmark text-ink">Reyna Isabel</span>
+    </a>
+    <nav class="hidden sm:flex items-center gap-8" aria-label="Secciones">
+      <a href="#catalogo" class="text-[14px] text-muted hover:text-ink transition-colors duration-150">Colección</a>
+      <a href="#a-medida" class="text-[14px] text-muted hover:text-ink transition-colors duration-150">A medida</a>
+    </nav>
+    <a href="#catalogo" class="text-[14px] font-medium text-ink sm:hidden">Colección</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO (canvas) ============ -->
+  <section class="bg-canvas pt-[var(--nav-h)]">
+    <div class="wrap">
+      <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-10 lg:gap-12 min-h-[calc(88vh-var(--nav-h))] lg:min-h-[560px] py-14 lg:py-20">
+
+        <div class="lg:col-span-5 lg:pr-6 reveal">
+          <p class="eyebrow mb-6" id="hero-eyebrow">Mantelería artesanal</p>
+          <h1 class="display-xl text-ink" id="hero-titulo">La mesa como un lienzo.</h1>
+          <p class="pull-quote text-graphite mt-7 max-w-[34ch]" id="hero-sub">Telas naturales, cortadas y terminadas a mano.</p>
+          <div class="mt-10">
+            <a href="#catalogo" class="btn btn-primary" id="hero-cta">Ver la colección</a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 reveal">
+          <div class="media shadow-soft h-[62vh] min-h-[380px] lg:h-[560px]">
+            <img data-foto-slot="hero" alt="Mesa vestida con mantel de lino natural" loading="eager" decoding="async">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MANIFIESTO (chalk) ============ -->
+  <section class="bg-chalk py-20 md:py-32 border-t border-hairline">
+    <div class="wrap">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+        <div class="lg:col-span-5 reveal">
+          <p class="pull-quote text-ink max-w-[22ch]" id="manifiesto-quote">Una mesa bien puesta no necesita levantar la voz.</p>
+        </div>
+        <div class="lg:col-span-6 lg:col-start-7 reveal">
+          <div class="space-y-6 text-graphite max-w-[58ch]" id="manifiesto-texto"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CATÁLOGO (canvas) ============ -->
+  <section class="bg-canvas py-20 md:py-32" id="catalogo">
+    <div class="wrap">
+
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14 reveal">
+        <div>
+          <p class="eyebrow mb-4" id="cat-eyebrow">Colección</p>
+          <h2 class="h2 text-ink max-w-[24ch]" id="cat-titulo">Piezas disponibles</h2>
+          <p class="mt-4 text-muted max-w-[46ch]" id="cat-bajada"></p>
+        </div>
+        <div class="flex flex-wrap gap-2" role="tablist" aria-label="Filtrar por categoría" id="chips"></div>
+      </div>
+
+      <div id="grid" class="flat" aria-live="polite"></div>
+      <p id="grid-vacio" class="hidden text-muted py-16 text-center"></p>
+
+    </div>
+  </section>
+
+  <!-- ============ A MEDIDA (blush — única banda pastel grande) ============ -->
+  <section class="bg-blush py-20 md:py-32" id="a-medida">
+    <div class="wrap">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+
+        <div class="lg:col-span-5 reveal">
+          <p class="eyebrow mb-4" id="am-eyebrow">A medida</p>
+          <h2 class="display-l text-ink max-w-[16ch]" id="am-titulo">Contanos tu mesa</h2>
+          <p class="mt-6 text-graphite max-w-[42ch]" id="am-bajada"></p>
+          <p class="mt-6 text-[14px] text-graphite" id="am-nota"></p>
+        </div>
+
+        <form class="lg:col-span-6 lg:col-start-7 reveal" id="form-medida" novalidate>
+          <div class="space-y-5">
+            <div>
+              <label for="f-medidas" class="block text-[14px] font-medium text-graphite mb-2" id="l-medidas">Medidas de tu mesa</label>
+              <input class="field" id="f-medidas" name="medidas" type="text" autocomplete="off">
+            </div>
+            <div>
+              <label for="f-ocasion" class="block text-[14px] font-medium text-graphite mb-2" id="l-ocasion">Ocasión</label>
+              <input class="field" id="f-ocasion" name="ocasion" type="text" autocomplete="off">
+            </div>
+            <div>
+              <label for="f-fecha" class="block text-[14px] font-medium text-graphite mb-2" id="l-fecha">Fecha en la que la necesitás</label>
+              <input class="field" id="f-fecha" name="fecha" type="date">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary mt-8 w-full sm:w-auto" id="am-cta">Enviar por WhatsApp</button>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST (bone) ============ -->
+  <section class="bg-bone py-14 md:py-20">
+    <div class="wrap">
+      <ul class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0" id="trust"></ul>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER (bone) ============ -->
+<footer class="bg-bone border-t border-hairline">
+  <div class="wrap py-14 md:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+
+      <div class="md:col-span-5">
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.jpg" alt="Reyna Isabel" class="h-12 w-12 rounded-full object-cover ring-1 ring-hairline" width="48" height="48">
+          <p id="footer-brand" class="wordmark text-ink">Reyna Isabel</p>
+        </div>
+        <p class="mt-4 text-muted max-w-[30ch]" id="footer-frase"></p>
+      </div>
+
+      <div class="md:col-span-3 md:col-start-7">
+        <p class="eyebrow mb-4">Contacto</p>
+        <ul class="space-y-2 text-[15px]">
+          <li><a class="text-graphite hover:text-ink transition-colors duration-150" id="footer-wa" href="#">WhatsApp</a></li>
+          <li><a class="text-graphite hover:text-ink transition-colors duration-150" id="footer-ig" href="#">Instagram</a></li>
+          <li><a class="text-graphite hover:text-ink transition-colors duration-150" id="footer-mail" href="#"></a></li>
+        </ul>
+      </div>
+
+      <div class="md:col-span-3 md:col-start-10">
+        <p class="eyebrow mb-4">Tienda</p>
+        <ul class="space-y-2 text-[15px]">
+          <li><a class="text-graphite hover:text-ink transition-colors duration-150" href="#catalogo">Colección</a></li>
+          <li><a class="text-graphite hover:text-ink transition-colors duration-150" href="#a-medida">A medida</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="mt-14 pt-6 border-t border-hairline flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <p class="text-[13px] text-faint" id="footer-legal"></p>
+      <p class="text-[13px] text-faint"><span id="year"></span> · <span id="footer-ciudad"></span></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ FLOTANTE WHATSAPP (aparece tras la 3ª pieza) ============ -->
+<a href="#" class="btn btn-primary wa-float" id="wa-float" rel="noopener">
+  Consultar por WhatsApp
+</a>
+
+<script src="contenido.defaults.js"></script>
+<script src="catalogo.defaults.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- datos ---------- */
+  function leer(clave, semilla) {
+    try {
+      var raw = localStorage.getItem(clave);
+      if (raw) { var v = JSON.parse(raw); if (v) return v; }
+    } catch (e) {}
+    return semilla;
+  }
+  var C = leer('manteles_contenido', window.CONTENIDO_DEFECTO);
+  var CAT = leer('manteles_catalogo', window.CATALOGO_DEFECTO);
+  if (!C || !CAT) return;
+
+  var FOTOS = C.fotos || {};
+  var WA = (C.marca && C.marca.whatsapp) || '';
+
+  function $(s) { return document.querySelector(s); }
+  function txt(id, valor) { var el = document.getElementById(id); if (el && valor != null) el.textContent = valor; }
+
+  function precio(n) {
+    return '$' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+  }
+
+  function linkWa(mensaje) {
+    return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(mensaje);
+  }
+
+  /* ---------- marca ---------- */
+  if (C.marca && C.marca.nombre) {
+    txt('nav-brand', C.marca.nombre);
+    txt('footer-brand', C.marca.nombre);
+    document.title = C.marca.nombre + ' — ' + (C.marca.tagline || 'Mantelería artesanal');
+  }
+
+  /* ---------- copy ---------- */
+  txt('hero-eyebrow', C.hero && C.hero.eyebrow);
+  txt('hero-titulo', C.hero && C.hero.titulo);
+  txt('hero-sub', C.hero && C.hero.subtitulo);
+  txt('hero-cta', C.hero && C.hero.cta);
+
+  txt('manifiesto-quote', C.manifiesto && C.manifiesto.pullQuote);
+  var mText = $('#manifiesto-texto');
+  if (mText && C.manifiesto && C.manifiesto.parrafos) {
+    C.manifiesto.parrafos.forEach(function (p) {
+      var el = document.createElement('p');
+      el.textContent = p;
+      mText.appendChild(el);
+    });
+  }
+
+  txt('cat-eyebrow', C.catalogo && C.catalogo.eyebrow);
+  txt('cat-titulo', C.catalogo && C.catalogo.titulo);
+  txt('cat-bajada', C.catalogo && C.catalogo.bajada);
+
+  txt('am-eyebrow', C.aMedida && C.aMedida.eyebrow);
+  txt('am-titulo', C.aMedida && C.aMedida.titulo);
+  txt('am-bajada', C.aMedida && C.aMedida.bajada);
+  txt('am-nota', C.aMedida && C.aMedida.nota);
+  txt('am-cta', C.aMedida && C.aMedida.cta);
+
+  if (C.aMedida && C.aMedida.campos) {
+    var cam = C.aMedida.campos;
+    txt('l-medidas', cam.medidas && cam.medidas.label);
+    txt('l-ocasion', cam.ocasion && cam.ocasion.label);
+    txt('l-fecha', cam.fecha && cam.fecha.label);
+    if ($('#f-medidas')) $('#f-medidas').placeholder = (cam.medidas && cam.medidas.placeholder) || '';
+    if ($('#f-ocasion')) $('#f-ocasion').placeholder = (cam.ocasion && cam.ocasion.placeholder) || '';
+  }
+
+  var trust = $('#trust');
+  if (trust && C.trust) {
+    C.trust.forEach(function (t, i) {
+      var li = document.createElement('li');
+      li.className = 'text-[15px] text-graphite md:px-6' + (i > 0 ? ' md:border-l md:border-hairline' : ' md:pl-0');
+      li.textContent = t;
+      trust.appendChild(li);
+    });
+  }
+
+  txt('footer-frase', C.footer && C.footer.frase);
+  txt('footer-legal', C.footer && C.footer.legal);
+  txt('footer-ciudad', C.marca && C.marca.ciudad);
+  txt('year', new Date().getFullYear());
+
+  if ($('#footer-mail') && C.marca && C.marca.email) {
+    $('#footer-mail').textContent = C.marca.email;
+    $('#footer-mail').href = 'mailto:' + C.marca.email;
+  }
+  if ($('#footer-ig') && C.marca && C.marca.instagram) {
+    var ig = C.marca.instagram.replace('@', '');
+    $('#footer-ig').textContent = C.marca.instagram;
+    $('#footer-ig').href = 'https://instagram.com/' + ig;
+    $('#footer-ig').rel = 'noopener';
+  }
+
+  /* ---------- fotos ---------- */
+  var heroImg = document.querySelector('[data-foto-slot="hero"]');
+  if (heroImg && FOTOS.hero) heroImg.src = FOTOS.hero;
+
+  /* ---------- catálogo ---------- */
+  var grid = $('#grid');
+  var vacio = $('#grid-vacio');
+  var chips = $('#chips');
+  var FILTROS = (C.catalogo && C.catalogo.filtros) || { todo: 'Todo' };
+  var ORDEN = ['todo', 'manteles', 'caminos', 'accesorios'];
+  var actual = 'todo';
+
+  function crearCard(item) {
+    var art = document.createElement('article');
+    art.className = 'card group';
+
+    var media = document.createElement('div');
+    media.className = 'media';
+    var img = document.createElement('img');
+    img.alt = item.titulo || '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.setAttribute('data-foto-slot', item.foto || '');
+    var src = FOTOS[item.foto];
+    if (src) {
+      img.src = src;
+    } else {
+      img.style.background = '#F4F1EB';
+    }
+    img.addEventListener('error', function () {
+      img.style.visibility = 'hidden';
+      media.style.background = '#F4F1EB';
+    });
+    media.appendChild(img);
+
+    var info = document.createElement('div');
+    info.className = 'info';
+
+    var cat = document.createElement('p');
+    cat.className = 'cat';
+    cat.textContent = FILTROS[item.categoria] || item.categoria || '';
+
+    var h = document.createElement('h3');
+    h.className = 'h3 text-ink mt-1';
+    h.textContent = item.titulo || '';
+
+    var desc = document.createElement('p');
+    desc.className = 'desc mt-1';
+    desc.textContent = item.descripcion || '';
+
+    var med = document.createElement('p');
+    med.className = 'med mt-1';
+    med.textContent = item.medidas || '';
+
+    var pr = document.createElement('p');
+    pr.className = 'price mt-3';
+    pr.textContent = precio(item.precio);
+
+    info.appendChild(cat);
+    info.appendChild(h);
+    if (item.descripcion) info.appendChild(desc);
+    if (item.medidas) info.appendChild(med);
+    info.appendChild(pr);
+
+    art.appendChild(media);
+    art.appendChild(info);
+    return art;
+  }
+
+  function render() {
+    var items = CAT.filter(function (i) {
+      return i && i.estado !== 'oculto';
+    });
+
+    if (actual !== 'todo') {
+      items = items.filter(function (i) { return i.categoria === actual; });
+    } else {
+      items = items.slice().sort(function (a, b) {
+        return (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0);
+      });
+    }
+
+    grid.innerHTML = '';
+    grid.classList.toggle('asym', actual === 'todo' && items.length >= 3);
+    grid.classList.toggle('flat', !(actual === 'todo' && items.length >= 3));
+
+    items.forEach(function (i) { grid.appendChild(crearCard(i)); });
+
+    refrescarAncla();
+    onScroll();
+
+    if (vacio) {
+      var hay = items.length > 0;
+      vacio.classList.toggle('hidden', hay);
+      vacio.textContent = (C.catalogo && C.catalogo.vacio) || '';
+    }
+  }
+
+  function renderChips() {
+    if (!chips) return;
+    chips.innerHTML = '';
+    ORDEN.forEach(function (clave) {
+      if (!FILTROS[clave]) return;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', String(clave === actual));
+      b.textContent = FILTROS[clave];
+      b.addEventListener('click', function () {
+        actual = clave;
+        Array.prototype.forEach.call(chips.children, function (c) {
+          c.setAttribute('aria-selected', String(c.textContent === FILTROS[clave]));
+        });
+        render();
+      });
+      chips.appendChild(b);
+    });
+  }
+
+  renderChips();
+  render();
+
+  /* ---------- franja a medida -> WhatsApp ---------- */
+  var form = $('#form-medida');
+  if (form) {
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+      var partes = ['Hola Reyna Isabel, quiero una pieza a medida.'];
+      if (v('f-medidas')) partes.push('Medidas: ' + v('f-medidas'));
+      if (v('f-ocasion')) partes.push('Ocasión: ' + v('f-ocasion'));
+      if (v('f-fecha')) partes.push('Para: ' + v('f-fecha'));
+      window.open(linkWa(partes.join('\n')), '_blank', 'noopener');
+    });
+  }
+
+  /* ---------- nav + flotante ---------- */
+  var nav = $('#nav');
+  var waFloat = $('#wa-float');
+  if (waFloat) {
+    waFloat.href = linkWa('Hola Reyna Isabel, quería consultarte por una pieza.');
+  }
+
+  var tercero = null;
+  function refrescarAncla() {
+    var cards = grid.querySelectorAll('.card');
+    tercero = cards[2] || null;
+  }
+
+  var lastY = window.scrollY;
+  var raf = false;
+
+  function onScroll() {
+    var y = window.scrollY;
+
+    if (nav) {
+      nav.classList.toggle('nav-scrolled', y > 8);
+      if (y > 120 && y > lastY + 8) nav.classList.add('nav-hidden');
+      else if (lastY > y + 8 || y < 120) nav.classList.remove('nav-hidden');
+    }
+
+    if (waFloat) {
+      var listo = false;
+      if (tercero) {
+        listo = tercero.getBoundingClientRect().bottom < 0;
+      } else {
+        listo = y > 1200;
+      }
+      waFloat.classList.toggle('is-on', listo);
+    }
+
+    lastY = y;
+    raf = false;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!raf) { raf = true; window.requestAnimationFrame(onScroll); }
+  }, { passive: true });
+
+  refrescarAncla();
+  window.addEventListener('resize', refrescarAncla);
+  onScroll();
+
+  /* ---------- reveal ---------- */
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var targets = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(targets, function (el) { el.classList.add('is-in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          en.target.classList.add('is-in');
+          io.unobserve(en.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+    Array.prototype.forEach.call(targets, function (el) { io.observe(el); });
+  }
+})();
+</script>
+
+</body>
+</html>
